@@ -13,7 +13,7 @@ WITH default_radius AS(
       ELSE 'No'
     END AS is_temporary_change,
     CASE 
-      WHEN EXTRACT( HOUR FROM (time_to-time_from)) > 24
+      WHEN EXTRACT( HOUR FROM (time_to-time_from)) >= 24
       THEN current_radius
       ELSE last_known_radius
     END AS default_radius_value
