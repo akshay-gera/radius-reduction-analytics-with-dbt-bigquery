@@ -3,15 +3,21 @@ WITH default_radius AS(
     delivery_area_id,
     time_from,
     time_to,
-    radius_from,
-    radius_to,
+    current_radius,
+    last_known_radius,
     time_to-time_from AS duration,
-    radius_to-radius_from AS radius_change,
+    current_radius-last_known_radius AS radius_change,
     CASE
-      WHEN EXTRACT( HOUR FROM (time_to-time_from)) >= 24
+      WHEN EXTRACT( HOUR FROM (time_to-time_from)) < 24
       THEN 'Yes'
       ELSE 'No'
-    END AS default_radius
+    END AS is_temporary_change,
+    CASE 
+      WHEN EXTRACT( HOUR FROM (time_to-time_from)) > 24
+      THEN current_radius
+      ELSE last_known_radius
+    END AS default_radius_value
+    
   FROM {{ ref('transformed_radius_log') }}
   ORDER BY delivery_area_id, time_from
 )
