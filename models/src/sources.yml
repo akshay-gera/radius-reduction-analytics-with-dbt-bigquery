@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: Raw  # Name of your source (could be any name)
+    description: "Raw data from the BigQuery dataset"
+    tables:
+        - name: Raw_Delivery_Radius_Log  # Table name (make sure it matches the table in BigQuery)
+          description: "Changes in cities' delivery radius for year 2023"
+          
+        - name: Raw_Hours
+          description: 'Hour start and end Timestamps for year 2023'
+        
+        - name: Raw_Purchases
+          description: 'Customer purchase data in a few cities for year 2023'
