@@ -1,7 +1,3 @@
-{{ config(
-    materialized='view'
-) }}
-
 WITH purchase_radius_joined AS(
     SELECT 
         hh.period_start,
@@ -19,7 +15,8 @@ WITH purchase_radius_joined AS(
         h.duration,
         h.radius_change,
         h.is_temporary_change,
-        h.default_radius_value
+        d.default_radius
+        
         
     FROM {{ ref('src_purchases') }} AS p
     LEFT JOIN 
@@ -30,7 +27,9 @@ WITH purchase_radius_joined AS(
         {{ ref('src_hours') }} AS hh
         ON p.time_received >= hh.period_start AND p.time_received < hh.period_end
 
+    LEFT JOIN {{ ref('default_radii') }} AS d
+    ON p.delivery_area_id = d.delivery_area_id AND p.time_received >= d.event_started_timestamp AND p.time_received < d.event_ended_timstamp
+
     ORDER BY p.delivery_area_id, time_received
 )
 SELECT * FROM purchase_radius_joined
-
