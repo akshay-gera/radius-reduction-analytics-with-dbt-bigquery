@@ -4,6 +4,7 @@ WITH radius_comparison AS(
       time_from,
       time_to,
       current_radius,
+      duration,
       dr.default_radius, 
       CASE 
         WHEN current_radius - dr.default_radius < 0 THEN 'reduced'
